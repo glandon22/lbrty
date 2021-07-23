@@ -164,3 +164,9 @@ resource "aws_volume_attachment" "jenkins_ebs_att" {
   volume_id   = aws_ebs_volume.jenkins_vol.id
   instance_id = aws_instance.jenkins_server.id
 }
+
+#Add IPs of lbrty and jenkins server to ansible hosts inventory and configure auth info
+resource "local_file" "hosts" {
+    content  = "${aws_instance.lbrty_server.public_ip} ansible_connection=ssh ansible_user=ubuntu ansible_ssh_private_key_file=${var.lbrty_pk_loc}\n${aws_instance.jenkins_server.public_ip} ansible_connection=ssh ansible_user=ubuntu ansible_ssh_private_key_file=${var.jenkins_pk_loc}\n"
+    filename = "/Users/lando/ansible/hosts"
+}
